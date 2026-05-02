@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ege Radar
 
-## Getting Started
+Ege bölgesi odaklı, Next.js (App Router) + Tailwind CSS v4 + Supabase ile geliştirilen haber sitesi iskeleti (V1).
 
-First, run the development server:
+## Kurulum
+
+```bash
+npm install
+cp .env.example .env.local
+```
+
+`.env.local` içinde `NEXT_PUBLIC_SUPABASE_URL` ve `NEXT_PUBLIC_SUPABASE_ANON_KEY` tanımlı değilse uygulama **mock veri** ile çalışır (yerel demo).
+
+## Geliştirme
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Üretim
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build
+npm start
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Supabase
 
-## Learn More
+- SQL şema: [`supabase/migrations/20250202120000_init.sql`](supabase/migrations/20250202120000_init.sql)
+- Edge Function örneği (Deno): [`supabase/functions/subscribe/index.ts`](supabase/functions/subscribe/index.ts) — TypeScript derlemesi `tsconfig` ile hariç tutuldu.
+- Bülten API: `POST /api/newsletter` — üretimde `SUPABASE_SERVICE_ROLE_KEY` gerekir; onay sayfası: `/confirm-newsletter?token=...`
 
-To learn more about Next.js, take a look at the following resources:
+## Özellikler (V1)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Atomic design bileşen yapısı, tema (next-themes), erişilebilir navigasyon (skip link, odak halkaları)
+- Haber detayında MDX gövde, okuma çubuğu, paylaşım, JSON-LD, ilgili haberler
+- Reklam slot bileşeni (sabit en-boy, CLS için)
+- `sitemap.xml`, `robots.txt`, `rss.xml`, Google News tarzı `haber-sitemap.xml`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Komutlar
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Komut | Açıklama |
+| ----- | -------- |
+| `npm run lint` | ESLint |
+| `npm run format` | Prettier |
