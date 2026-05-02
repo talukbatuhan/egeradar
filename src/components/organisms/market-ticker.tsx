@@ -1,6 +1,3 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import { TrendingDown, TrendingUp } from "lucide-react";
 import type { MarketQuote } from "@/lib/data/market-strip";
 import { MOCK_MARKET_QUOTES } from "@/lib/data/market-strip";
@@ -37,38 +34,18 @@ function QuoteChip({ q }: { q: MarketQuote }) {
 }
 
 export function MarketTicker({ quotes = MOCK_MARKET_QUOTES }: { quotes?: MarketQuote[] }) {
-  const [reduceMotion, setReduceMotion] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    queueMicrotask(() => setReduceMotion(mq.matches));
-    const fn = () => setReduceMotion(mq.matches);
-    mq.addEventListener("change", fn);
-    return () => mq.removeEventListener("change", fn);
-  }, []);
-
-  const loop = [...quotes, ...quotes];
+  if (!quotes.length) return null;
 
   return (
     <div
       className="border-b border-slate-800 bg-slate-950 text-slate-100"
       role="region"
       aria-label="Piyasa özeti"
-      aria-live="polite"
-      aria-atomic="false"
     >
-      <div className="relative overflow-hidden">
-        <div
-          className={cn(
-            "flex w-max items-stretch",
-            !reduceMotion && "animate-market-marquee"
-          )}
-          style={reduceMotion ? { flexWrap: "wrap", width: "100%", justifyContent: "center" } : undefined}
-        >
-          {reduceMotion
-            ? quotes.map((q) => <QuoteChip key={q.id} q={q} />)
-            : loop.map((q, i) => <QuoteChip key={`${q.id}-${i}`} q={q} />)}
-        </div>
+      <div className="flex w-full flex-wrap items-center justify-center gap-y-1 px-2 sm:px-0">
+        {quotes.map((q) => (
+          <QuoteChip key={q.id} q={q} />
+        ))}
       </div>
     </div>
   );

@@ -2,21 +2,29 @@ import { notFound } from "next/navigation";
 import { ArchiveSection } from "@/components/templates/archive-section";
 import {
   getArticlesByTagSlug,
+  getTagBySlug,
   getTrendingArticles,
+  listAllTagSlugs,
 } from "@/lib/data/articles";
-import { MOCK_TAGS } from "@/lib/data/mock";
 
 export const revalidate = 120;
+
+export const dynamicParams = true;
 
 type Props = {
   params: Promise<{ slug: string }>;
   searchParams: Promise<{ page?: string }>;
 };
 
+export async function generateStaticParams() {
+  const rows = await listAllTagSlugs();
+  return rows.map((r) => ({ slug: r.slug }));
+}
+
 export default async function TagArchivePage({ params, searchParams }: Props) {
   const { slug } = await params;
   const { page: pageStr } = await searchParams;
-  const tag = MOCK_TAGS.find((t) => t.slug === slug);
+  const tag = await getTagBySlug(slug);
   if (!tag) notFound();
 
   const articles = await getArticlesByTagSlug(slug);

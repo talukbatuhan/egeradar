@@ -8,20 +8,22 @@ import {
 import { SiteFooter } from "@/components/organisms/site-footer";
 import { Navbar } from "@/components/organisms/navbar";
 import { getHomeArticles } from "@/lib/data/articles";
-import { MOCK_BREAKING } from "@/lib/data/mock";
+import { getLiveMarketQuotes } from "@/lib/data/market-live";
 
 export default async function SiteLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const tickerItems = MOCK_BREAKING.map((b) => ({
-    id: b.id,
-    title: b.title,
-    href: b.link,
+  const [articles, marketQuotes] = await Promise.all([
+    getHomeArticles(),
+    getLiveMarketQuotes(),
+  ]);
+  const tickerItems = articles.slice(0, 10).map((a) => ({
+    id: a.id,
+    title: a.title,
+    href: `/haber/${a.slug}`,
   }));
-
-  const articles = await getHomeArticles();
   const carouselSlides: NewsCarouselSlide[] = articles.slice(0, 6).map((a) => ({
     id: a.id,
     title: a.title,
@@ -36,7 +38,7 @@ export default async function SiteLayout({
       <SkipLink />
       <Navbar />
       <BreakingTicker items={tickerItems} />
-      <MarketTicker />
+      <MarketTicker quotes={marketQuotes} />
       <NewsHeroCarousel slides={carouselSlides} />
       <main id="icerik" className="flex-1">
         {children}

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { MOCK_BREAKING } from "@/lib/data/mock";
 import { getHomeArticles } from "@/lib/data/articles";
 import { categoryBySlug } from "@/lib/data/constants";
 
@@ -31,10 +30,13 @@ export default async function LiveFeedPage({ searchParams }: Props) {
         ) : null}
       </h1>
       <ul className="mt-8 space-y-4">
-        {MOCK_BREAKING.map((b) => (
-          <li key={b.id}>
-            <Link href={b.link} className="text-lg font-medium text-breaking hover:underline">
-              {b.title}
+        {articles.slice(0, 8).map((a) => (
+          <li key={a.id}>
+            <Link
+              href={`/haber/${a.slug}`}
+              className="text-lg font-medium text-breaking hover:underline"
+            >
+              {a.title}
             </Link>
           </li>
         ))}

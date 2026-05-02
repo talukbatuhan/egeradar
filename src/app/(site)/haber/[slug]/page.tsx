@@ -15,17 +15,20 @@ import {
   getArticleBySlug,
   getNextArticleAfter,
   getRelatedArticles,
+  listPublishedArticleSlugs,
 } from "@/lib/data/articles";
 import { breadcrumbJsonLd, newsArticleJsonLd } from "@/lib/seo/jsonld";
-import { MOCK_ARTICLES } from "@/lib/data/mock";
 import { splitArticleBody } from "@/lib/utils/split-mdx";
 
 type Props = { params: Promise<{ slug: string }> };
 
 export const revalidate = 300;
 
+export const dynamicParams = true;
+
 export async function generateStaticParams() {
-  return MOCK_ARTICLES.map((a) => ({ slug: a.slug }));
+  const rows = await listPublishedArticleSlugs();
+  return rows.map((r) => ({ slug: r.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -55,7 +58,7 @@ export default async function ArticlePage({ params }: Props) {
   if (!article) notFound();
 
   const related = await getRelatedArticles(article, 6);
-  const next = getNextArticleAfter(article);
+  const next = await getNextArticleAfter(article);
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "http://localhost:3000";
   const shareUrl = `${siteUrl}/haber/${article.slug}`;

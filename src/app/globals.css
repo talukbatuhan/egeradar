@@ -91,7 +91,7 @@ body {
   }
 }
 
-@keyframes market-marquee {
+@keyframes breaking-marquee {
   from {
     transform: translateX(0);
   }
@@ -100,12 +100,18 @@ body {
   }
 }
 
-.animate-market-marquee {
-  animation: market-marquee 48s linear infinite;
+.breaking-ticker__track {
+  display: inline-flex;
+  width: max-content;
+  max-width: none;
+  flex-wrap: nowrap;
+  align-items: center;
+  will-change: transform;
+  animation: breaking-marquee 68s linear infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-market-marquee {
+  .breaking-ticker__track {
     animation: none;
   }
 }

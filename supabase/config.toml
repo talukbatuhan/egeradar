@@ -1,0 +1,6 @@
+# Yerel Supabase CLI — https://supabase.com/docs/guides/cli/config
+# `supabase db reset` migration’ları sıfırdan uygular ve aşağıdaki seed dosyasını çalıştırır.
+
+[db.seed]
+enabled = true
+sql_paths = ["./seed.sql"]
